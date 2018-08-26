@@ -260,7 +260,7 @@ client.on('ready', () => {
 
 
 client.on('message', message => {
- if(message.content.startsWith(prefix + تعال")) {
+ if(message.content.startsWith(prefix + "join")) {
 message.member.voiceChannel.join();
 }
 });
