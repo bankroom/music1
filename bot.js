@@ -260,11 +260,16 @@ client.on('ready', () => {
 
 
 client.on('message', message => {
- if(message.content.startsWith(prefix + "تعال")) {
+ if(message.content.startsWith(prefix + "join")) {
 message.member.voiceChannel.join();
 }
 });
 
+
+epic.on('ready',async () => {
+  epic.channels.find(ch => ch.id === "483035198150148097" && ch.type === 
+'voice').join();
+});
 
 
 
