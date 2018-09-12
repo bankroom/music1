@@ -42,7 +42,7 @@ client.on('message', async msg => {
 			return msg.channel.send('لا يتوآجد لدي صلاحية للتكلم بهذآ الروم');
 		}
 		if (!permissions.has('SPEAK')) {
-			return msg.channel.send('Music-1يجب ان تكون بروم');
+			return msg.channel.send('ا يتوآجد لدي صلاحية للتكلم بهذآ الروم');
 		}
 
 		if (!permissions.has('EMBED_LINKS')) {
