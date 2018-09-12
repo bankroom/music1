@@ -39,7 +39,7 @@ client.on('message', async msg => {
 		if (!voiceChannel) return msg.channel.send('يجب توآجد حضرتك بروم صوتي .');
 		const permissions = voiceChannel.permissionsFor(msg.client.user);
 		if (!permissions.has('CONNECT')) {
-			return msg.channel.send('لا يتوآجد لدي صلاحية للتكلم بهذآ الروم');
+			return msg.channel.send('يجب ان تكون في روم ميوزك1');
 		}
 		if (!permissions.has('SPEAK')) {
 			return msg.channel.send('يجب ان تكون في روم ميوزك1');
