@@ -39,10 +39,10 @@ client.on('message', async msg => {
 		if (!voiceChannel) return msg.channel.send('يجب توآجد حضرتك بروم صوتي .');
 		const permissions = voiceChannel.permissionsFor(msg.client.user);
 		if (!permissions.has('CONNECT')) {
-			return msg.channel.send('لا يتوآجد لدي صلاحية للتكلم بهذآ الروم');
+			return msg.channel.send('Music-1يجب ان تكون بروم');
 		}
 		if (!permissions.has('SPEAK')) {
-			return msg.channel.send('لا يتوآجد لدي صلاحية للتكلم بهذآ الروم');
+			return msg.channel.send('لMusic-1يجب ان تكون بروم');
 		}
 
 		if (!permissions.has('EMBED_LINKS')) {
