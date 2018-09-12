@@ -68,7 +68,7 @@ client.on('message', async msg => {
 					const embed1 = new Discord.RichEmbed()
 			        .setDescription(`**الرجآء من حضرتك إختيآر رقم المقطع** :
 ${videos.map(video2 => `[**${++index} **] \`${video2.title}\``).join('\n')}`)
-					.setFooter("! United Family.-")
+					.setFooter("lego")
 					msg.channel.sendEmbed(embed1).then(message =>{message.delete(20000)})
 					
 					try {
@@ -230,30 +230,25 @@ client.on("message", message => {
   const embed = new Discord.RichEmbed()
       .setColor("#000000")
       .setDescription(`
-${prefix}play ⇏ لتشغيل أغنية برآبط أو بأسم
-${prefix}skip ⇏ لتجآوز الأغنية الحآلية
-${prefix}pause ⇏ إيقآف الأغنية مؤقتا
-${prefix}resume ⇏ لموآصلة الإغنية بعد إيقآفهآ مؤقتا
-${prefix}vol ⇏ لتغيير درجة الصوت 100 - 0
-${prefix}stop ⇏ لإخرآج البوت من الروم
-${prefix}np ⇏ لمعرفة الأغنية المشغلة حآليا
-${prefix}queue ⇏ لمعرفة قآئمة التشغيل
+$2play ⇏ لتشغيل أغنية برآبط أو بأسم
+$2skip ⇏ لتجآوز الأغنية الحآلية
+$2pause ⇏ إيقآف الأغنية مؤقتا
+$2resume ⇏ لموآصلة الإغنية بعد إيقآفهآ مؤقتا
+$2vol ⇏ لتغيير درجة الصوت 100 - 0
+$2stop ⇏ لإخرآج البوت من الروم
+$2np ⇏ لمعرفة الأغنية المشغلة حآليا
+$2queue ⇏ لمعرفة قآئمة التشغيل
  `)
    message.channel.sendEmbed(embed)
     
    }
    }); 
-   
-
 
 
 
 client.on('ready', () => {
   client.user.setGame(`1help لخواص البوت `,'https://www.twitch.');
 });
-
-
-
 
 
 
@@ -271,7 +266,4 @@ message.member.voiceChannel.join();
 
 
 
-
-
-
-   client.login(process.env.BOT_TOKEN);
+client.login(process.env.BOT_TOKEN);
