@@ -69,7 +69,7 @@ client.on('message', async msg => { // eslint disable line
             color: 15158332,
             fields: [{
                 name: "❌ Error",
-                value: 'I\'m sorry but you need to be in a voice channel to play music!'
+                value: 'يجب ان تكون في روم ميوزك 1 او استخدم من 6الى8'
               }
             ]
           }
