@@ -263,22 +263,6 @@ message.member.voiceChannel.join();
 
 
 
-client.on('message', message => {
-  if (!message.guild) return;
- if(!message.author.id === '490323547017707522') return;
-  if (message.content === 'ادخل') {
-    if (message.member.voiceChannel) {
-      message.member.voiceChannel.join()
-        .then(connection => { 
-          message.reply('لقد دخلت الروم بنجاح !');
-        })
-        .catch(console.log);
-    } else {
-      message.reply('يجب ان تكون في روم صوتي');
-    }
-  }
-});
-
 
 
 
