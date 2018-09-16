@@ -26,7 +26,7 @@ ${client.guilds.size} servers
 ${client.channels.size} channel
 ${client.users.size} users
 
-Prefix: ${PREFIX}
+Prefix: 1{PREFIX}
 -----------------
 `);
 
