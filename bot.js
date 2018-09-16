@@ -161,7 +161,7 @@ ${serverQueue.songs.map(song => `**${++index} -** ${song.title}`).join('\n')}
 		}
 		return msg.channel.send('There is nothing playing.');
 	} else if (command === `resume`) {
-		if (msg.channel.id !== "ايدي الروم اللي تبي البوت يستقبل منه") return;
+		if (msg.channel.id !== "483032953450922017") return;
 		if (serverQueue && !serverQueue.playing) {
 			serverQueue.playing = true;
 			serverQueue.connection.dispatcher.resume();
