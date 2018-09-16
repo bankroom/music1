@@ -1,18 +1,20 @@
 const { Client, Util } = require('discord.js');
 const YouTube = require('simple-youtube-api');
 const ytdl = require('ytdl-core');
- 
+const nodeopus = require('node-opus');
+const ffmpeg = require('ffmpeg');
+
 const client = new Client({ disableEveryone: true });
 const GOOGLE_API_KEY = 'AIzaSyAdORXg7UZUo7sePv97JyoDqtQVi3Ll0b8';
 const youtube = new YouTube(GOOGLE_API_KEY);
- 
+
 const queue = new Map();
-const PREFIX = '1';
+const PREFIX = '$';
 client.on('warn', console.warn);
- 
+
 client.on('error', console.error);
- 
-client.on('ready', () => {
+
+client.on('ready', () => { 
 console.log(`
 ------------------------------------------------------
 > Logging in...
@@ -26,10 +28,10 @@ LET'S GO!
 -------------------------------------------------------
 ------------------------------------------------------
 ----------------------Bot's logs----------------------`);
- 
- 
+
+
 });
- 
+
 client.on('ready', function(){
     client.user.setStatus("dnd");
     var ms = 10000 ;
@@ -46,13 +48,13 @@ client.on('ready', function(){
         i = i+j;
         client.user.setGame(setGame[i],`https://www.twitch.tv/skwadraa`);
     }, ms);10000
- 
+
 });
- 
+
 client.on('disconnect', () => console.log('I just disconnected, making sure you know, I will reconnect now...'));
- 
+
 client.on('reconnecting', () => console.log('I am reconnecting now!'));
- 
+
 client.on('message', async msg => { // eslint disable line
     if (msg.author.bot) return undefined;
     if (!msg.content.startsWith(PREFIX)) return undefined;
@@ -60,10 +62,10 @@ client.on('message', async msg => { // eslint disable line
     const searchString = args.slice(1).join(' ');
     const url = args[1] ? args[1].replace(/<(.+)>/g, '$1') : '';
     const serverQueue = queue.get(msg.guild.id);
- 
+
     if (msg.content.startsWith(`${PREFIX}play`)) {
         console.log(`${msg.author.tag} has been used the ${PREFIX}play command in ${msg.guild.name}`);
- 
+
         const voiceChannel = msg.member.voiceChannel;
         if (!voiceChannel) return msg.channel.send({embed: {
             color: 15158332,
@@ -74,8 +76,8 @@ client.on('message', async msg => { // eslint disable line
             ]
           }
         });
-        const permissions = voiceChannel.permissionsFor(msg.client.user);
-        if (!permissions.has('CONNECT')) {
+		const permissions = voiceChannel.permissionsFor(msg.client.user);
+		if (!permissions.has('CONNECT')) {
             return msg.channel.send({embed: {
                 color: 15158332,
                 fields: [{
@@ -85,9 +87,9 @@ client.on('message', async msg => { // eslint disable line
                 ]
               }
             });
-        }
-        if (!permissions.has('SPEAK')) {
-            return msg.channel.send({embed: {
+		}
+		if (!permissions.has('SPEAK')) {
+			return msg.channel.send({embed: {
                 color: 15158332,
                 fields: [{
                     name: "❌ Error",
@@ -97,7 +99,7 @@ client.on('message', async msg => { // eslint disable line
               }
             });
         }
-       
+        
         if (url.match(/^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$/)) {
             const playlist = await youtube.getPlaylist(url);
             const videos = await playlist.getVideos();
@@ -168,7 +170,7 @@ client.on('message', async msg => { // eslint disable line
                     }).then(message =>{message.delete(5000)})
                 }
             }
- 
+
             return handleVideo(video, msg, voiceChannel);
         }
     } else if (msg.content.startsWith(`${PREFIX}skip`)) {
@@ -302,11 +304,11 @@ client.on('message', async msg => { // eslint disable line
         }).then(message =>{message.delete(5000)})
         } else if(msg.content.startsWith(`${PREFIX}help`)) {
         console.log(`${msg.author.tag} has been used the ${PREFIX}help command in ${msg.guild.name}`);
- 
+
         msg.channel.send('Please check your direct messages :inbox_tray:').then(message =>{message.delete(5000)})
- 
+
         msg.react('✅');
- 
+
         msg.author.send({embed: {
             color: 15158332,
             author: {
@@ -359,7 +361,7 @@ client.on('message', async msg => { // eslint disable line
         }).then(message =>{message.delete(2000)})
     } else if (msg.content.startsWith(`${PREFIX}resume`)) {
         console.log(`${msg.author.tag} has been used the ${PREFIX}resume command in ${msg.guild.name}`);
- 
+
         if (serverQueue && !serverQueue.playing) {
             serverQueue.playing =  true;
             serverQueue.connection.dispatcher.resume();
@@ -383,11 +385,11 @@ client.on('message', async msg => { // eslint disable line
           }
         }).then(message =>{message.delete(5000)})
     }
- 
+
     return undefined;
 });
- 
- 
+
+
 async function handleVideo(video, msg, voiceChannel, playlist = false) {
     const serverQueue = queue.get(msg.guild.id);
         const song = {
@@ -405,9 +407,9 @@ async function handleVideo(video, msg, voiceChannel, playlist = false) {
                 playing: true
             };
             queue.set(msg.guild.id, queueConstruct);
- 
+
             queueConstruct.songs.push(song);
- 
+
             try {
                 var connection = await voiceChannel.join();
                 queueConstruct.connection = connection;
@@ -440,35 +442,16 @@ async function handleVideo(video, msg, voiceChannel, playlist = false) {
         }
         return undefined;
 }
- 
-client.on('message', message =>{
-  if(message.content.startsWith('join')){
-    const voiceChannel = message.member.voiceChannel
-    voiceChannel.join();
-    message.channel.send("تم الأتصال بالروم الصوتي")
-}})
- 
- 
+
 function play(guild, song) {
     const serverQueue = queue.get(guild.id);
- 
+
     if (!song) {
         serverQueue.voiceChannel.leave();
         queue.delete(guild.id);
         return;
     }
- 
- 
-var servers = {};
-function play(connection, message, args) {
-  var server = servers[message.guild.id];
-  server.dispatcher = connection.playStream(YTDL(args[0]), {filter: "audioonly"});
-  server.queue.shift();
-  server.dispatcher.on("end", function() {
-    if (server.queue[0]) play(connection, message);
-    else connection.disconnect();
-  });
- 
+
     const dispatcher = serverQueue.connection.playStream(ytdl(song.url))
         .on('end', () => {
             console.log('Song ended.');
@@ -477,7 +460,7 @@ function play(connection, message, args) {
         })
         .on('error', error => console.log(error));
     dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
- 
+
     serverQueue.textChannel.send({embed: {
         color: 15158332,
         fields: [{
@@ -488,22 +471,22 @@ function play(connection, message, args) {
       }
     }).then(message =>{message.delete(5000)})
 }
- 
+
 client.on('message', message => {
   if (!message.content.startsWith(PREFIX)) return;
   var args = message.content.split(' ').slice(1);
   var argresult = args.join(' ');
   if (message.author.id !== "439187325503930369") return;
- 
+
 if (message.content.startsWith(PREFIX + 'setstream')) {
   client.user.setGame(argresult, "https://www.twitch.tv/darkknite55");
-     console.log('test' + argresult);
+	 console.log('test' + argresult);
     message.channel.sendMessage(`Streaming: **${argresult}`)
 }
- 
+
 if (message.content.startsWith(PREFIX + 'setname')) {
   client.user.setUsername(argresult).then
-      message.channel.sendMessage(`Username Changed To **${argresult}**`)
+	  message.channel.sendMessage(`Username Changed To **${argresult}**`)
   return message.reply("You Can change the username 2 times per hour");
 }
 if (message.content.startsWith(PREFIX + 'setavatar')) {
@@ -511,8 +494,24 @@ if (message.content.startsWith(PREFIX + 'setavatar')) {
    message.channel.sendMessage(`Avatar Changed Successfully To **${argresult}**`);
 }
 });
- 
- 
- 
+var servers = {};
+function play(connection, message, args) {
+  var server = servers[message.guild.id];
+  server.dispatcher = connection.playStream(YTDL(args[0]), {filter: "audioonly"});
+  server.queue.shift();
+  server.dispatcher.on("end", function() {
+    if (server.queue[0]) play(connection, message);
+    else connection.disconnect();
+  });
+}
+
+
+client.on('message', message =>{
+  if(message.content.startsWith('*join')){
+    const voiceChannel = message.member.voiceChannel
+    voiceChannel.join();
+    message.channel.send("تم الأتصال بالروم الصوتي")
+}})
+
  
 client.login(process.env.BOT_TOKEN);
