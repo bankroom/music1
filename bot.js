@@ -1,9 +1,8 @@
-onst { Client, Util } = require('discord.js');
+const { Client, Util } = require('discord.js');
 const Discord = require("discord.js");
-const { TOKEN, PREFIX, GOOGLE_API_KEY } = require('./config');
+const { PREFIX, GOOGLE_API_KEY } = require('./config');
 const YouTube = require('simple-youtube-api');
 const ytdl = require('ytdl-core');
-const FFMPEG = require('ffmpeg');
 
 const client = new Client({ disableEveryone: true });
 
@@ -26,7 +25,7 @@ ${client.guilds.size} servers
 ${client.channels.size} channel
 ${client.users.size} users
 
-Prefix: ${PREFIX}
+Prefix: 1{PREFIX}
 -----------------
 `);
 
@@ -55,7 +54,7 @@ client.on('message', async msg => { // eslint-disable-line
 	command = command.slice(PREFIX.length)
 
 	if (command === `play`) {
-		if (msg.member.voiceChannelID !== "483035198150148097") return msg.reply("You should be in ``listening,1`` to use me")
+		if (msg.member.voiceChannelID !== "483035198150148097") return msg.reply(`You should be in \`\`${client.channels.get("483035198150148097").name}\`\` to use me`);	
 		if (msg.channel.id !== "483032953450922017") return;
 		const voiceChannel = msg.member.voiceChannel;
 		if (!voiceChannel) return msg.channel.send('** You need to be in a voice channel :notes:**');
@@ -86,7 +85,7 @@ client.on('message', async msg => { // eslint-disable-line
 					var videos = await youtube.searchVideos(searchString, 5);
 					let index = 0;
 					const embed1 = new Discord.RichEmbed()
-			        .setAuthor(`Brix`, `https://cdn.discordapp.com/icons/419553524339179530/a1a36af32f7887b5017acd8cc9e5b2a9.jpg?size=128`)
+			        .setAuthor(client.user.username, client.user.avatarURL)
 			        .setDescription(`__Choose the video number__ :
 ${videos.map(video2 => `[**${++index} **] \`${video2.title}\``).join('\n')}`)
 					.setFooter("")
@@ -161,7 +160,7 @@ ${serverQueue.songs.map(song => `**${++index} -** ${song.title}`).join('\n')}
 		}
 		return msg.channel.send('There is nothing playing.');
 	} else if (command === `resume`) {
-		if (msg.channel.id !== "ايدي الروم اللي تبي البوت يستقبل منه") return;
+		if (msg.channel.id !== "483032953450922017") return;
 		if (serverQueue && !serverQueue.playing) {
 			serverQueue.playing = true;
 			serverQueue.connection.dispatcher.resume();
@@ -261,19 +260,15 @@ if (message.content.startsWith(PREFIX + 'setname')) {
 if (message.content.startsWith(PREFIX + 'setavatar')) {
   client.user.setAvatar(argresult);
    message.channel.sendMessage(`Avatar Changed Successfully To **${argresult}**`);
-}
-});
-client.on('message', msg => {
-
-    if (msg.content == '1join') {
-        if (msg.member.voiceChannel) {
-
-     if (msg.member.voiceChannel.joinable) {
-         msg.member.voiceChannel.join().then(msg.react('✅'));
+} else if(message.content.startsWith(PREFIX + 'join')) {
+	 if (message.member.voiceChannel) {
+     if (message.member.voiceChannel.joinable) {
+		message.member.voiceChannel.join().then(msg.react('✅'));
      }
     }
 }
-})
+});
+
 client.on('ready', () => {
 	client.channels.get("483035198150148097").join();
 	});
