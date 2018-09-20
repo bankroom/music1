@@ -8,6 +8,15 @@ const youtube = new YouTube("AIzaSyAdORXg7UZUo7sePv97JyoDqtQVi3Ll0b8");
 const queue = new Map();
 const client = new Discord.Client();
 
+/*
+البكجآت
+npm install discord.js
+npm install ytdl-core
+npm install get-youtube-id
+npm install youtube-info
+npm install simple-youtube-api
+npm install queue
+*/
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
@@ -15,7 +24,7 @@ client.on('ready', () => {
     console.log(`[Codes] ${client.users.size}`)
     client.user.setStatus("idle")
 });
-const prefix = "1"
+const prefix = "s"
 client.on('message', async msg => {
 	if (msg.author.bot) return undefined;
 	if (!msg.content.startsWith(prefix)) return undefined;
@@ -170,6 +179,12 @@ async function handleVideo(video, msg, voiceChannel, playlist = false) {
 
 function play(guild, song) {
 	const serverQueue = queue.get(guild.id);
+
+	if (!song) {
+		serverQueue.voiceChannel.leave();
+		queue.delete(guild.id);
+		return;
+	}
 	console.log(serverQueue.songs);
 	const dispatcher = serverQueue.connection.playStream(ytdl(song.url))
 		.on('end', reason => {
@@ -241,23 +256,40 @@ message.member.voiceChannel.join();
 
 
 
-
-client.on('message', msg => {
-
-    if (msg.content == '1join') {
-        if (msg.member.voiceChannel) {
-
-     if (msg.member.voiceChannel.joinable) {
-         msg.member.voiceChannel.join().then(msg.react('✅'));
-     }
-    }
+const Discord = require("discord.js")
+const client = new Discord.Client();
+const YTDL = require('ytdl-core');
+const nodeopus = require('node-opus');
+const ffmpeg = require('ffmpeg');
+var servers = {};
+function play(connection, message, args) {
+  var server = servers[message.guild.id];
+  server.dispatcher = connection.playStream(YTDL(args[0]), {filter: "audioonly"});
+  server.queue.shift();
+  server.dispatcher.on("end", function() {
+    if (server.queue[0]) play(connection, message);
+    else connection.disconnect();
+  });
 }
-})
-client.on('ready', () => {
-	client.channels.get("483035198150148097").join();
-	});
+
+
+client.on('message', message =>{
+  if(message.content.startsWith('join')){
+    const voiceChannel = message.member.voiceChannel
+    voiceChannel.join();
+    message.channel.send("تم الأتصال بالروم الصوتي")
+}})
+
+
+
+
+
+
+
+
 
 
 
 
 client.login(process.env.BOT_TOKEN);
+
