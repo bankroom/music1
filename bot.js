@@ -294,7 +294,12 @@ client.on("message", message => { //help
 }
 }); 
 
-
+client.on('message', message =>{
+  if(message.content.startsWith('انقلع')){
+    const voiceChannel = message.member.voiceChannel
+    voiceChannel.disconnect();
+    message.channel.send("تم الخروج من الروم الصوتي")
+}})
 
 
 client.login(process.env.BOT_TOKEN);
