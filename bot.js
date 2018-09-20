@@ -1,27 +1,14 @@
-const Discord = require("discord.js")
+const Discord = require("discord.js");
+const ytdl = require("ytdl-core");
+const { Client, Util } = require('discord.js');
+const getYoutubeID = require('get-youtube-id');
+const fetchVideoInfo = require('youtube-info');
+const YouTube = require('simple-youtube-api');
+const youtube = new YouTube("AIzaSyAdORXg7UZUo7sePv97JyoDqtQVi3Ll0b8");
+const queue = new Map();
 const client = new Discord.Client();
-const YTDL = require('ytdl-core');
-const nodeopus = require('node-opus');
-const ffmpeg = require('ffmpeg');
-var servers = {};
-function play(connection, message, args) {
-  var server = servers[message.guild.id];
-  server.dispatcher = connection.playStream(YTDL(args[0]), {filter: "audioonly"});
-  server.queue.shift();
-  server.dispatcher.on("end", function() {
-    if (server.queue[0]) play(connection, message);
-    else connection.disconnect();
-  });
-}
-/*
-البكجآت
-npm install discord.js
-npm install ytdl-core
-npm install get-youtube-id
-npm install youtube-info
-npm install simple-youtube-api
-npm install queue
-*/
+
+
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
@@ -205,7 +192,7 @@ function play(guild, song) {
 }
 
 const adminprefix = "$vip";
-const devs = ['274923685985386496'];
+const devs = ['230681534674370560'];
 client.on('message', message => {
   var argresult = message.content.split(` `).slice(1).join(' ');
     if (!devs.includes(message.author.id)) return;
@@ -263,23 +250,8 @@ message.member.voiceChannel.join();
 
 
 
-client.on('message', message =>{
-  if(message.content.startsWith('join')){
-    const voiceChannel = message.member.voiceChannel
-    voiceChannel.join();
-    message.channel.send("تم الأتصال بالروم الصوتي")
-}})
-
-
-
-
-
-
-
-
 
 
 
 
 client.login(process.env.BOT_TOKEN);
-
