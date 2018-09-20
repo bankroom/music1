@@ -1,13 +1,18 @@
-const Discord = require("discord.js");
-const ytdl = require("ytdl-core");
-const { Client, Util } = require('discord.js');
-const getYoutubeID = require('get-youtube-id');
-const fetchVideoInfo = require('youtube-info');
-const YouTube = require('simple-youtube-api');
-const youtube = new YouTube("AIzaSyAdORXg7UZUo7sePv97JyoDqtQVi3Ll0b8");
-const queue = new Map();
+const Discord = require("discord.js")
 const client = new Discord.Client();
-
+const YTDL = require('ytdl-core');
+const nodeopus = require('node-opus');
+const ffmpeg = require('ffmpeg');
+var servers = {};
+function play(connection, message, args) {
+  var server = servers[message.guild.id];
+  server.dispatcher = connection.playStream(YTDL(args[0]), {filter: "audioonly"});
+  server.queue.shift();
+  server.dispatcher.on("end", function() {
+    if (server.queue[0]) play(connection, message);
+    else connection.disconnect();
+  });
+}
 /*
 البكجآت
 npm install discord.js
@@ -256,21 +261,6 @@ message.member.voiceChannel.join();
 
 
 
-const Discord = require("discord.js")
-const client = new Discord.Client();
-const YTDL = require('ytdl-core');
-const nodeopus = require('node-opus');
-const ffmpeg = require('ffmpeg');
-var servers = {};
-function play(connection, message, args) {
-  var server = servers[message.guild.id];
-  server.dispatcher = connection.playStream(YTDL(args[0]), {filter: "audioonly"});
-  server.queue.shift();
-  server.dispatcher.on("end", function() {
-    if (server.queue[0]) play(connection, message);
-    else connection.disconnect();
-  });
-}
 
 
 client.on('message', message =>{
